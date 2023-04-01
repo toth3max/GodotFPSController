@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3 uid="uid://dqrh0hstuipdw"]
+
+[ext_resource type="PackedScene" uid="uid://c2ppdn0e3yiyl" path="res://player/player.tscn" id="1_2wg70"]
+[ext_resource type="Texture2D" uid="uid://xj5xyj12tdob" path="res://kenney_prototype-textures/PNG/Dark/texture_04.png" id="1_81o7j"]
+[ext_resource type="Material" uid="uid://hb0wn27qwkiy" path="res://materials/archway-trilinear.tres" id="3_gsyfq"]
+[ext_resource type="Environment" uid="uid://dqo8ie77r2fta" path="res://main_environment.tres" id="4_t50c3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1gvdf"]
+albedo_texture = ExtResource("1_81o7j")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3xelg"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_vrqgf"]
+dof_blur_far_enabled = true
+dof_blur_near_enabled = true
+dof_blur_near_distance = 1.0
+
+[node name="World" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("1_2wg70")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.106677, 0)
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = SubResource("StandardMaterial3D_1gvdf")
+size = Vector3(1000, 1, 1000)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+transform = Transform3D(10000, 0, 0, 0, 1, 0, 0, 0, 10000, 0, 0, 0)
+shape = SubResource("BoxShape3D_3xelg")
+
+[node name="Archway" type="CSGCombiner3D" parent="."]
+material_override = ExtResource("3_gsyfq")
+
+[node name="Box" type="CSGBox3D" parent="Archway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+size = Vector3(4, 4, 4)
+
+[node name="Box2" type="CSGBox3D" parent="Archway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+operation = 2
+size = Vector3(2, 2, 4)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Archway"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.99034, 0)
+operation = 2
+radius = 1.0
+height = 5.0
+sides = 32
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("4_t50c3")
+camera_attributes = SubResource("CameraAttributesPractical_vrqgf")
